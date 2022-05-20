@@ -13,9 +13,10 @@ function loadRemote(url) {
 
     if (cachedUrls.has(url)) {
       document.head.removeChild(cachedUrls.get(url))
-    } else {
-      cachedUrls.set(url, el);
+      cachedUrls.delete(url)
     }
+
+    cachedUrls.set(url, el);
   });
 }
 
