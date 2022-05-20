@@ -42,29 +42,6 @@ module.exports = {
   plugins: [
     new ModuleFederationPlugin({
       name: "hostapp",
-      filename: "remoteEntry.js",
-      remotes: {
-        remoteapp: `promise new Promise(resolve => {
-          const script = document.createElement('script')
-          script.src = 'http://localhost:' + window.config.port + '/remoteEntry.js'
-          script.onload = () => {
-            const proxy = {
-              get: (request) => window.remoteapp.get(request),
-              init: (arg) => {
-                try {
-                  return window.remoteapp.init(arg)
-                } catch(e) {
-                  console.log('remote container already initialized')
-                }
-              }
-            }
-            resolve(proxy)
-          }
-          document.head.appendChild(script);
-        })
-      `
-      },
-      exposes: {},
       shared: {
         ...deps,
         react: {
