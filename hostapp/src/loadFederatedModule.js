@@ -1,7 +1,11 @@
 const cachedUrls = new Map();
 
 function loadRemote(url) {
-  return new Promise((resolve) => {
+  if (cachedUrls.has(url)) {
+    return cachedUrls.get(url);
+  }
+
+  const p$ = new Promise((resolve) => {
     const script = document.createElement('script');
     script.src = url;
     script.type = 'text/javascript';
@@ -9,15 +13,11 @@ function loadRemote(url) {
     script.onload = () => {
       resolve()
     }
-    const el = document.head.appendChild(script);
-
-    if (cachedUrls.has(url)) {
-      document.head.removeChild(cachedUrls.get(url))
-      cachedUrls.delete(url)
-    }
-
-    cachedUrls.set(url, el);
+    document.head.appendChild(script);
   });
+
+  cachedUrls.set(url, p$);
+  return p$;
 }
 
 function loadComponent(scope, module) {
